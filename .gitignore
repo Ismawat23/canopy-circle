@@ -1,0 +1,37 @@
+## Node
+node_modules/
+*.log
+npm-debug.log*
+
+## Build outputs
+dist/
+build/
+.tsbuildinfo
+
+## Generated proto files (run make build-all to regenerate)
+plugin/src/proto/index.js
+plugin/src/proto/index.cjs
+plugin/src/proto/index.d.ts
+plugin/src/proto/descriptors.ts
+
+## Environment
+.env
+.env.local
+.env.*.local
+
+## Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+## Plugin socket
+plugin.sock
+/tmp/plugin/
+
+## Frontend build
+frontend/dist/
+
+## Proxy build
+proxy/dist/
