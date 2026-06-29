@@ -1,0 +1,22 @@
+syntax = "proto3";
+package types;
+option go_package = "github.com/canopy-network/go-plugin/contract";
+
+import "google/protobuf/any.proto";
+
+message Event {
+  string event_type = 1;
+  oneof msg {
+    EventCustom custom = 11;
+  }
+  uint64 height = 91;
+  string reference = 92;
+  uint64 chainId = 93;
+  uint64 block_height = 94;
+  bytes block_hash = 95;
+  bytes address = 96;
+}
+
+message EventCustom {
+  google.protobuf.Any msg = 1;
+}
