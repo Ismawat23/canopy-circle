@@ -1,0 +1,80 @@
+syntax = "proto3";
+package types;
+option go_package = "github.com/canopy-network/go-plugin/contract";
+
+// ─── On-Chain Social State Types ──────────────────────────────────────────────
+
+// Profile stores an on-chain identity for a Canopy Circle user
+message Profile {
+  bytes address = 1;
+  string username = 2;
+  string bio = 3;
+  string avatar_url = 4;
+  uint64 created_at = 5;
+  uint64 post_count = 6;
+  uint64 follower_count = 7;
+  uint64 following_count = 8;
+  uint64 reputation = 9;
+}
+
+// Post stores a social post on-chain
+message Post {
+  string id = 1;
+  bytes author_address = 2;
+  string circle_id = 3;
+  string content = 4;
+  uint64 created_at = 5;
+  uint64 reply_count = 6;
+  uint64 appreciate_count = 7;
+}
+
+// Circle stores a community circle on-chain
+message Circle {
+  string id = 1;
+  bytes creator_address = 2;
+  string name = 3;
+  string description = 4;
+  string rules = 5;
+  uint64 created_at = 6;
+  uint64 member_count = 7;
+}
+
+// Reply stores a reply to a post on-chain
+message Reply {
+  string id = 1;
+  string post_id = 2;
+  bytes author_address = 3;
+  string content = 4;
+  uint64 created_at = 5;
+}
+
+// Notification stores an on-chain social notification
+message Notification {
+  string id = 1;
+  bytes recipient_address = 2;
+  string notification_type = 3;
+  bytes from_address = 4;
+  string post_id = 5;
+  uint64 created_at = 6;
+  bool read = 7;
+}
+
+// FollowRecord stores a follow relationship (used as a marker key)
+message FollowRecord {
+  uint64 created_at = 1;
+}
+
+// AppreciateRecord stores an appreciate relationship (used as a marker key)
+message AppreciateRecord {
+  uint64 created_at = 1;
+}
+
+// BookmarkRecord stores a bookmark relationship (used as a marker key)
+message BookmarkRecord {
+  uint64 created_at = 1;
+}
+
+// CircleMemberRecord stores circle membership (used as a marker key)
+message CircleMemberRecord {
+  uint64 joined_at = 1;
+}
