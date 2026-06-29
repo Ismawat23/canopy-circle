@@ -1,0 +1,15 @@
+syntax = "proto3";
+package types;
+option go_package = "github.com/canopy-network/go-plugin/contract";
+
+// Account holds funds and can send or receive transactions using a crypto key pair
+message Account {
+  bytes address = 1;
+  uint64 amount = 2;
+}
+
+// Pool holds funds managed directly by the blockchain protocol
+message Pool {
+  uint64 id = 1;
+  uint64 amount = 2;
+}
