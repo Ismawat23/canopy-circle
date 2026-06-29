@@ -1,0 +1,115 @@
+syntax = "proto3";
+package types;
+option go_package = "github.com/canopy-network/go-plugin/contract";
+
+import "google/protobuf/any.proto";
+
+// Transaction represents a request or action submitted to the network
+// THIS MUST MATCH lib.Transaction EXACTLY for signing
+message Transaction {
+  string message_type = 1;
+  google.protobuf.Any msg = 2;
+  Signature signature = 3;
+  uint64 created_height = 4;
+  uint64 time = 5;
+  uint64 fee = 6;
+  string memo = 7;
+  uint64 network_id = 8;
+  uint64 chain_id = 9;
+}
+
+// MessageSend is a standard transfer transaction
+message MessageSend {
+  bytes from_address = 1;
+  bytes to_address = 2;
+  uint64 amount = 3;
+}
+
+// FeeParams defines transaction fee limits
+message FeeParams {
+  uint64 send_fee = 1;
+}
+
+// Signature is a cryptographic signature
+message Signature {
+  bytes public_key = 1;
+  bytes signature = 2;
+}
+
+// ─── Social-Fi Transaction Types ──────────────────────────────────────────────
+
+// MessageCreateProfile creates an on-chain identity for a user
+message MessageCreateProfile {
+  bytes address = 1;
+  string username = 2;
+  string bio = 3;
+  string avatar_url = 4;
+}
+
+// MessageUpdateProfile updates an existing profile
+message MessageUpdateProfile {
+  bytes address = 1;
+  string bio = 2;
+  string avatar_url = 3;
+}
+
+// MessageCreatePost publishes a post to the global feed or a specific circle
+message MessageCreatePost {
+  bytes author_address = 1;
+  string content = 2;
+  string circle_id = 3;
+  string post_id = 4;
+}
+
+// MessageReplyPost adds a reply to an existing post
+message MessageReplyPost {
+  bytes author_address = 1;
+  string post_id = 2;
+  string content = 3;
+  string reply_id = 4;
+}
+
+// MessageCreateCircle creates a new community circle
+message MessageCreateCircle {
+  bytes creator_address = 1;
+  string name = 2;
+  string description = 3;
+  string rules = 4;
+  string circle_id = 5;
+}
+
+// MessageJoinCircle joins an existing circle
+message MessageJoinCircle {
+  bytes member_address = 1;
+  string circle_id = 2;
+}
+
+// MessageLeaveCircle leaves a circle
+message MessageLeaveCircle {
+  bytes member_address = 1;
+  string circle_id = 2;
+}
+
+// MessageFollowUser follows another user
+message MessageFollowUser {
+  bytes follower_address = 1;
+  bytes followee_address = 2;
+}
+
+// MessageUnfollowUser unfollows a user
+message MessageUnfollowUser {
+  bytes follower_address = 1;
+  bytes followee_address = 2;
+}
+
+// MessageAppreciatePost appreciates (likes) a post
+message MessageAppreciatePost {
+  bytes user_address = 1;
+  string post_id = 2;
+}
+
+// MessageBookmarkPost bookmarks a post for later
+message MessageBookmarkPost {
+  bytes user_address = 1;
+  string post_id = 2;
+}
