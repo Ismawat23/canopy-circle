@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.tsbuildinfo
+src/proto/index.js
+src/proto/index.cjs
+src/proto/index.d.ts
+src/proto/descriptors.ts
