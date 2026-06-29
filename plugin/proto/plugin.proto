@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package types;
+option go_package = "github.com/canopy-network/canopy/lib";
+import "event.proto";
+import "tx.proto";
+
+message FSMToPlugin {
+  uint64 id = 1;
+  oneof payload {
+    PluginFSMConfig config = 2;
+    PluginGenesisRequest genesis = 3;
+    PluginBeginRequest begin = 4;
+    PluginCheckRequest check = 5;
+    PluginDeliverRequest deliver = 6;
+    PluginEndRequest end = 7;
+    PluginStateReadResponse state_read = 8;
+    PluginStateWriteResponse state_write = 9;
+    PluginQueryResponse query = 10;
+    PluginError error = 99;
+  }
+}
+
+message PluginToFSM {
+  uint64 id = 1;
+  oneof payload {
+    PluginConfig config = 2;
+    PluginGenesisResponse genesis = 3;
+    PluginBeginResponse begin = 4;
+    PluginCheckResponse check = 5;
+    PluginDeliverResponse deliver = 6;
+    PluginEndResponse end = 7;
+    PluginStateReadRequest state_read = 8;
+    PluginStateWriteRequest state_write = 9;
+    PluginQueryRequest query = 10;
+  }
+}
+
+message PluginConfig {
+  string name = 1;
+  uint64 id = 2;
+  uint64 version = 3;
+  repeated string supported_transactions = 4;
+  repeated bytes file_descriptor_protos = 5;
+  repeated string transaction_type_urls = 6;
+  repeated string event_type_urls = 7;
+  repeated bytes custom_state_prefixes = 8;
+}
+
+message PluginFSMConfig { PluginConfig config = 1; }
+message PluginGenesisRequest { bytes genesis_json = 1; }
+message PluginGenesisResponse { PluginError error = 99; }
+message PluginBeginRequest { uint64 height = 1; }
+message PluginBeginResponse { repeated Event events = 1; PluginError error = 99; }
+message PluginCheckRequest { Transaction tx = 1; }
+message PluginCheckResponse {
+  repeated bytes authorized_signers = 1;
+  bytes recipient = 2;
+  PluginError error = 99;
+}
+message PluginDeliverRequest { Transaction tx = 1; }
+message PluginDeliverResponse { repeated Event events = 1; PluginError error = 99; }
+message PluginEndRequest { uint64 height = 1; bytes proposer_address = 2; }
+message PluginEndResponse { repeated Event events = 1; PluginError error = 99; }
+message PluginError { uint64 code = 1; string module = 2; string msg = 3; }
+
+message PluginQueryRequest { uint64 height = 1; PluginStateReadRequest read = 2; }
+message PluginQueryResponse { PluginStateReadResponse read = 1; PluginError error = 99; }
+
+message PluginStateReadRequest {
+  repeated PluginKeyRead keys = 1;
+  repeated PluginRangeRead ranges = 2;
+}
+message PluginKeyRead { uint64 query_id = 1; bytes key = 2; }
+message PluginRangeRead { uint64 query_id = 1; bytes prefix = 2; uint64 limit = 3; bool reverse = 4; }
+message PluginStateReadResponse { repeated PluginReadResult results = 1; PluginError error = 99; }
+message PluginReadResult { uint64 query_id = 1; repeated PluginStateEntry entries = 2; }
+message PluginStateWriteRequest { repeated PluginSetOp sets = 1; repeated PluginDeleteOp deletes = 2; }
+message PluginStateWriteResponse { PluginError error = 99; }
+message PluginSetOp { bytes key = 1; bytes value = 2; }
+message PluginDeleteOp { bytes key = 1; }
+message PluginStateEntry { bytes key = 1; bytes value = 2; }
